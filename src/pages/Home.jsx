@@ -1,7 +1,9 @@
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
@@ -27,14 +29,15 @@ function Home() {
             </div>
 
             <button
+              onClick={() => navigate("/Quiz")}
               className="mt-6 inline-flex items-center justify-center 
                          px-8 py-4 border border-transparent text-lg 
                          font-bold rounded-full shadow-xl 
-                         text-white bg-indigo-600 
-                         hover:bg-indigo-700 
+                         text-white bg-slate-500
+                         hover:bg-indigo-500 
                          focus:outline-none focus:ring-4 focus:ring-indigo-500 
                          focus:ring-opacity-50 
-                         transition transform hover:scale-105 duration-300"
+                         transition transform hover:scale-90 duration-300"
             >
               Get Started
             </button>
