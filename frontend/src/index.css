@@ -1,12 +1,129 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Palanquin:wght@100;200;300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Palanquin:wght@100;200;300;400;500;600;700&display=swap");
+@import "./style/toast.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+  --color-bg: #f5f7ff;
+  --color-surface: #eef2ff;
+  --color-card: rgba(255, 255, 255, 0.85);
+  --color-nav: rgba(255, 255, 255, 0.9);
+  --color-nav-text: #111827;
+  --color-text: #111827;
+  --color-text-muted: #4b5563;
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+  --color-accent-contrast: #f9fafb;
+  --color-border: rgba(99, 102, 241, 0.18);
+  --color-ring: rgba(99, 102, 241, 0.35);
+  --gradient-hero: linear-gradient(
+    135deg,
+    rgba(238, 242, 255, 1) 0%,
+    rgba(224, 242, 254, 1) 100%
+  );
+  --shadow-soft: 0 24px 45px -28px rgba(15, 23, 42, 0.35);
+  --shadow-strong: 0 35px 65px -28px rgba(88, 28, 135, 0.45);
+  --backdrop-blur: blur(18px);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: "Montserrat", "Palanquin", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    transition: var(
+      --theme-transition,
+      background 220ms ease,
+      color 220ms ease
+    );
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 65%, transparent);
+    color: var(--color-accent-contrast);
+  }
+}
+
 @layer utilities {
   .text-slate-gray {
     color: #708090; /* Slate Gray color */
+  }
+
+  .bg-surface {
+    background: var(--color-surface);
+  }
+
+  .bg-card {
+    background: var(--color-card);
+  }
+
+  .bg-nav {
+    background: var(--color-nav);
+  }
+
+  .text-primary {
+    color: var(--color-text);
+  }
+
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .accent-text {
+    color: var(--color-accent);
+  }
+
+  .border-soft {
+    border-color: var(--color-border);
+  }
+
+  .ring-accent {
+    box-shadow: 0 0 0 3px var(--color-ring);
+  }
+
+  .shadow-theme-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-theme-strong {
+    box-shadow: var(--shadow-strong);
+  }
+
+  .hover\:shadow-theme-soft:hover {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .hover\:shadow-theme-strong:hover {
+    box-shadow: var(--shadow-strong);
+  }
+
+  .glass-panel {
+    background: var(--color-card);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .gradient-hero {
+    background-image: var(--gradient-hero);
+  }
+
+  .accent-button {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  .accent-button:hover {
+    background: var(--color-accent-hover);
   }
 }

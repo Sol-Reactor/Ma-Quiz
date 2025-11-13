@@ -1,40 +1,6 @@
-import { createContext, useContext, useState, useCallback } from "react";
-
-// --- MOCK DATA (Consolidated here, move to a separate 'data' file if it grows) ---
-const MOCK_QUIZ_QUESTIONS = [
-  {
-    id: 1,
-    question: "Which concept allows an object to take on many forms?",
-    options: ["Inheritance", "Encapsulation", "Polymorphism", "Abstraction"],
-    answer: "Polymorphism",
-    topic: "OOP",
-  },
-  {
-    id: 2,
-    question: "What is the primary function of a DNS server?",
-    options: [
-      "Assigning IP addresses",
-      "Translating domain names to IP addresses",
-      "Routing packets",
-      "Encrypting data",
-    ],
-    answer: "Translating domain names to IP addresses",
-    topic: "Networking",
-  },
-  {
-    id: 3,
-    question: "Which of these is NOT a principle of RESTful API design?",
-    options: [
-      "Statelessness",
-      "Client-Server separation",
-      "Code-On-Demand",
-      "Layered System",
-    ],
-    answer: "Code-On-Demand",
-    topic: "Web Development",
-  },
-];
-// --- END MOCK DATA ---
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { quizAPI } from "../services/api";
+import { useAuth } from "./AuthContext";
 
 // 1. Create the Context
 const QuizContext = createContext();
@@ -46,29 +12,90 @@ export const useQuiz = () => {
 
 // 3. The Provider Component (Contains all the logic and state)
 export const QuizProvider = ({ children }) => {
-  // --- STATE (from useQuizLogic) ---
+  // --- STATE ---
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [quizStatus, setQuizStatus] = useState("start"); // 'start', 'active', 'finished'
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerLocked, setIsAnswerLocked] = useState(false);
-  const [quizQuestions, setQuizQuestions] = useState(MOCK_QUIZ_QUESTIONS); // Use MOCK_DATA here
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [quizzes, setQuizzes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [userAnswers, setUserAnswers] = useState([]);
+
+  const { isAuthenticated } = useAuth();
 
   const totalQuestions = quizQuestions.length;
   const currentQuestion = quizQuestions[currentQuestionIndex];
 
-  // --- ACTIONS (from useQuizLogic) ---
+  // Fetch all available quizzes
+  const fetchQuizzes = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await quizAPI.getAllQuizzes();
+      setQuizzes(response.quizzes || []);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching quizzes:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch a specific quiz by ID
+  const fetchQuizById = useCallback(async (quizId) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await quizAPI.getQuizById(quizId);
+      setCurrentQuiz(response.quiz);
+      
+      // Transform questions to match frontend format
+      const formattedQuestions = response.questions.map((q) => ({
+        id: q.id,
+        question: q.question_text || q.question,
+        options: Array.isArray(q.options) ? q.options : [],
+        topic: q.topic || 'General',
+      }));
+      
+      setQuizQuestions(formattedQuestions);
+      setCurrentQuestionIndex(0);
+      setScore(0);
+      setUserAnswers([]);
+      return { success: true };
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching quiz:', err);
+      return { success: false, error: err.message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load quizzes on mount
+  useEffect(() => {
+    fetchQuizzes();
+  }, [fetchQuizzes]);
+
+  // --- ACTIONS ---
 
   const startQuiz = useCallback(() => {
-    // Reset state and set status to active
+    if (quizQuestions.length === 0) {
+      setError('No questions available. Please select a quiz first.');
+      return;
+    }
     setCurrentQuestionIndex(0);
     setScore(0);
     setQuizStatus("active");
     setSelectedOption(null);
     setIsAnswerLocked(false);
-    // In a real app, you might fetch fresh quizQuestions here.
-  }, []);
-  
+    setUserAnswers([]);
+    setError(null);
+  }, [quizQuestions]);
+
   const handleAnswerSelection = useCallback(
     (option) => {
       if (isAnswerLocked || quizStatus !== "active") return;
@@ -76,13 +103,42 @@ export const QuizProvider = ({ children }) => {
       setSelectedOption(option);
       setIsAnswerLocked(true);
 
-      const isCorrect = option === currentQuestion.answer;
-      if (isCorrect) {
-        setScore((s) => s + 1);
-      }
+      // Store user's answer (replace if already answered this question)
+      const answer = {
+        questionId: currentQuestion.id,
+        selectedOption: option,
+      };
+      setUserAnswers((prev) => {
+        const filtered = prev.filter(a => a.questionId !== currentQuestion.id);
+        return [...filtered, answer];
+      });
+
+      // Note: We don't know if it's correct until we submit to backend
+      // For now, we'll just store the answer
     },
     [currentQuestion, isAnswerLocked, quizStatus]
   );
+
+  const submitQuiz = useCallback(async () => {
+    if (!currentQuiz || !isAuthenticated) {
+      setError('You must be logged in to submit quiz results');
+      setQuizStatus("finished");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await quizAPI.submitQuiz(currentQuiz.id, userAnswers);
+      setScore(response.score);
+      setQuizStatus("finished");
+    } catch (err) {
+      setError(err.message);
+      console.error('Error submitting quiz:', err);
+      setQuizStatus("finished");
+    } finally {
+      setLoading(false);
+    }
+  }, [currentQuiz, userAnswers, isAuthenticated]);
 
   const goToNextQuestion = useCallback(() => {
     if (!isAnswerLocked) return;
@@ -92,18 +148,29 @@ export const QuizProvider = ({ children }) => {
       setSelectedOption(null);
       setIsAnswerLocked(false);
     } else {
-      setQuizStatus("finished");
+      // Submit quiz to backend when finished
+      submitQuiz();
     }
-  }, [currentQuestionIndex, totalQuestions, isAnswerLocked]);
+  }, [currentQuestionIndex, totalQuestions, isAnswerLocked, submitQuiz]);
 
   const restartQuiz = useCallback(() => {
     // Resets the state entirely, returning to the start screen
     setCurrentQuestionIndex(0);
     setScore(0);
-    setQuizStatus("start"); // Go back to the initial start screen
+    setQuizStatus("start");
     setSelectedOption(null);
     setIsAnswerLocked(false);
+    setUserAnswers([]);
+    setError(null);
   }, []);
+
+  const selectQuiz = useCallback(async (quizId) => {
+    const result = await fetchQuizById(quizId);
+    if (result.success) {
+      setQuizStatus("start");
+    }
+    return result;
+  }, [fetchQuizById]);
 
   // --- Context Value ---
   const value = {
@@ -116,12 +183,19 @@ export const QuizProvider = ({ children }) => {
     selectedOption,
     isAnswerLocked,
     quizQuestions,
-    
+    quizzes,
+    currentQuiz,
+    loading,
+    error,
+
     // Actions
     startQuiz,
     restartQuiz,
     handleAnswerSelection,
     goToNextQuestion,
+    selectQuiz,
+    fetchQuizzes,
+    submitQuiz,
   };
 
   return (

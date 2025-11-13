@@ -2,6 +2,7 @@ import Question from "./Question";
 import Results from "./Results";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../context/QuizContext.jsx";
+import toast from "react-hot-toast";
 
 function Quiz() {
   // 1. Get ALL necessary state and actions from the context
@@ -20,19 +21,41 @@ function Quiz() {
 
   const navigate = useNavigate();
 
-  // --- NEW HANDLER FOR QUITTING ---
   const handleQuitQuiz = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to quit the quiz? Your current progress will be lost."
-      )
-    ) {
-      // 1. Reset the solo quiz state in the context (sets status to 'start')
-      restartQuiz();
-      // 2. Navigate back to the QuizPage (or home, depending on your routing)
-      navigate("/quizpage");
-    }
+    toast(
+      (t) => (
+        <div className="flex flex-col items-center gap-4 p-2 text-center">
+          <p className="font-semibold">
+            Are you sure you want to quit?
+            <br />
+            <span className="text-sm font-normal text-gray-600">
+              Your progress will be lost.
+            </span>
+          </p>
+          <div className="flex gap-4">
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                restartQuiz();
+                navigate("/quiz");
+              }}
+              className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-150 text-sm"
+            >
+              Yes, Quit
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition duration-150 text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 6000 }
+    );
   };
+
   // ------------------------------------
 
   // 2. Logic remains the same, but uses context data
@@ -49,7 +72,7 @@ function Quiz() {
 
   if (!currentQuestion) {
     return (
-      <div className="text-center mt-8 text-xl text-gray-600">
+      <div className="text-center mt-8 text-xl text-muted">
         No quiz questions loaded.
       </div>
     );
@@ -58,19 +81,33 @@ function Quiz() {
   return (
     <div className="space-y-8">
       {/* Quiz Progress Header */}
-      <div className="flex justify-between items-center p-4 bg-white shadow-md rounded-lg">
-        <h1 className="text-2xl font-bold text-gray-800">
+      <div className="glass-panel flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 rounded-3xl">
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </h1>
-        <p className="text-xl font-semibold text-indigo-600">Score: {score}</p>
-
-        {/* NEW: Quit Button in the header for easy access */}
-        <button
-          onClick={handleQuitQuiz}
-          className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-150 text-sm"
-        >
-          Quit Quiz
-        </button>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="w-40 bg-[var(--color-surface)] rounded-full h-2.5 overflow-hidden shadow-theme-soft">
+            <div
+              className="bg-[var(--color-accent)] h-2.5 rounded-full transition-all duration-300"
+              style={{
+                width: `${
+                  ((currentQuestionIndex + 1) / totalQuestions) * 100
+                }%`,
+              }}
+            ></div>
+          </div>
+          <span className="text-sm font-semibold text-muted">
+            {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
+            Complete
+          </span>
+          {/* NEW: Quit Button in the header for easy access */}
+          <button
+            onClick={handleQuitQuiz}
+            className="px-4 py-2 bg-red-500 text-white font-semibold rounded-full shadow-theme-soft hover:shadow-theme-strong transition duration-150 text-sm"
+          >
+            Quit Quiz
+          </button>
+        </div>
       </div>
 
       {/* Renders the current Question component */}
@@ -86,11 +123,11 @@ function Quiz() {
         <button
           onClick={goToNextQuestion}
           disabled={!isAnswerLocked}
-          className={`px-8 py-3 font-semibold rounded-lg shadow-md transition duration-150 
+          className={`px-8 py-3 font-semibold rounded-full transition duration-150 
             ${
               isAnswerLocked
-                ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                ? "accent-button shadow-theme-soft hover:shadow-theme-strong"
+                : "bg-[var(--color-surface)] text-muted cursor-not-allowed"
             }`}
         >
           {currentQuestionIndex < totalQuestions - 1

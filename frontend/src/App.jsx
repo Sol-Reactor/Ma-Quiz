@@ -2,15 +2,22 @@ import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Quiz from "./pages/QuizPage.jsx";
-import Signup from "./pages/LogIn.jsx";
 import CompetePage from "./pages/CompetePage.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx"; // Assuming this is your user dashboard
+import LogIn from "./pages/LogIn.jsx"; // Corrected import name
+import MainLayout from "./components/layout/MainLayout.jsx";
+import { Toaster } from "react-hot-toast";
+import "./style/toast.css";
+import { useAuth } from "./context/AuthContext";
+import LoadingSpinner from "./components/common/LoadingSpinner";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
+    path: "/", // ✅ Parent layout route (includes NavBar)
+    element: <MainLayout />,
     errorElement: (
-      <div className="flex flex-col  justify-center items-center h-[100vh] text-lg text-gray-400  ">
+      <div className="flex flex-col justify-center items-center h-[100vh] text-lg text-gray-400">
         <h1>Error 404: Page Not Found</h1>
         <p>Please visit the home page</p>
         <button
@@ -27,27 +34,42 @@ const router = createBrowserRouter([
         </button>
       </div>
     ),
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/quiz",
-    element: <Quiz />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
-  {
-    path: "/CompetePage",
-    element: <CompetePage />,
+    children: [
+      { index: true, element: <Home /> }, // same as path: "/"
+      { path: "about", element: <About /> },
+      { path: "quiz", element: <Quiz /> },
+      { path: "competepage", element: <CompetePage /> },
+      { path: "dashboard", element: <UserDashboard /> },
+      { path: "admin", element: <AdminDashboard /> },
+      { path: "signin", element: <LogIn /> },
+      { path: "signup", element: <LogIn /> }, // Added route for /signup
+    ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: { marginTop: "20px" },
+        }}
+        reverseOrder={false}
+      />
+    </>
+  );
 }
 
 export default App;

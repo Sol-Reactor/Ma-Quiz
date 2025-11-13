@@ -1,73 +1,148 @@
-import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-import AuthModal from "./AuthModal";
+import React, { useEffect, useRef, useState } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useAuthModal } from "../../context/AuthModalContext";
+import ProfileModal from "./ProfileModal";
+import toast from "react-hot-toast";
+import {
+  PaintBrushIcon,
+  ChevronDownIcon,
+  ArrowPathRoundedSquareIcon,
+} from "@heroicons/react/24/outline";
+import { useTheme } from "../../context/ThemeContext";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // AUTHENTICATION STATE: False by default
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout, isAdmin } = useAuth();
+  const { themeKey, setTheme, themes, cycleTheme } = useTheme();
+  const navigate = useNavigate();
+  const themeMenuRef = useRef(null);
+  const { setIsModalOpen } = useAuthModal();
+  const activeTheme = themes.find((item) => item.key === themeKey);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        themeMenuRef.current &&
+        !themeMenuRef.current.contains(event.target)
+      ) {
+        setIsThemeMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Quiz", href: "/quiz" },
-    { name: "Contact", href: "/contact" },
+    { name: "About", href: "/About" },
+    { name: "Quiz", href: "/Quiz" },
   ];
 
-  const baseLinkClasses =
-    "text-gray-600 hover:text-indigo-600 font-medium transition duration-150 py-2 px-3 rounded-md";
-  const activeLinkClasses =
-    "text-white bg-indigo-600 font-bold py-2 px-3 rounded-md";
+  // Add dashboard link based on user role
+  if (isAuthenticated) {
+    if (isAdmin) {
+      navLinks.push({ name: "Admin", href: "/admin" });
+    } else {
+      navLinks.push({ name: "Dashboard", href: "/dashboard" });
+    }
+  }
 
-  // LOGIC: Function to handle successful login/signup
-  const handleAuthSuccess = () => {
-    setIsAuthenticated(true);
-  };
+  const baseLinkClasses =
+    "text-muted hover:text-[var(--color-text)] font-semibold transition duration-150 py-2 px-3 rounded-md";
+  const activeLinkClasses =
+    "accent-button shadow-theme-soft font-semibold py-2 px-3 rounded-md";
 
   // LOGIC: Function to handle logout
   const handleLogout = () => {
-    setIsAuthenticated(false);
     setIsOpen(false); // Close mobile menu if open
+    // Use a promise to show toast *before* navigating
+    toast
+      .promise(
+        new Promise((resolve) => {
+          logout(); // Perform the logout action
+          setTimeout(resolve, 1500); // Wait for toast to be visible
+        }),
+        {
+          loading: "Logging out...",
+          success: "Logout successful!",
+          error: "Logout failed.",
+        }
+      )
+      .then(() => navigate("/")); // Navigate to home page AFTER toast
+  };
+  const getColorFromName = (name) => {
+    const colors = [
+      "bg-gradient-to-br from-blue-500 to-indigo-500",
+      "bg-gradient-to-br from-emerald-500 to-teal-500",
+      "bg-gradient-to-br from-fuchsia-500 to-pink-500",
+      "bg-gradient-to-br from-amber-400 to-orange-500",
+      "bg-gradient-to-br from-cyan-400 to-sky-500",
+    ];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
   };
 
   // LOGIC: Action Button rendering based on auth status
   const AuthButton = ({ className, isMobile = false }) =>
     isAuthenticated ? (
-      <button
-        onClick={handleLogout}
-        className={
-          isMobile
-            ? "block text-center w-full mt-2 py-2 px-4 text-base font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200 shadow-md"
-            : `${className} bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition duration-150 shadow-md`
-        }
-      >
-        Log Out
-      </button>
+      <div className={`flex items-center gap-4 ${isMobile ? "w-full" : ""}`}>
+        <button
+          onClick={() => setIsProfileModalOpen(true)}
+          className={`${
+            isMobile ? "hidden" : "flex"
+          } items-center justify-center w-10 h-10 rounded-full text-white font-bold text-lg uppercase ${getColorFromName(
+            user.username
+          )} hover:ring-2 hover:ring-offset-2 hover:ring-indigo-500 transition-all`}
+          aria-label="Open profile"
+        >
+          {user.username.charAt(0)}
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className={`${
+            isMobile ? "flex-1 justify-center" : ""
+          } inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--color-surface)] text-[var(--color-text)] font-semibold shadow-theme-soft hover:shadow-theme-strong transition-all`}
+        >
+          Logout
+        </button>
+      </div>
     ) : (
       <button
         onClick={() => {
           if (isMobile) setIsOpen(false);
-          setIsModalOpen(true);
+          setIsModalOpen(true); // Use context's setIsModalOpen
         }}
         className={
           isMobile
-            ? "block text-center w-full mt-2 py-2 px-4 text-base font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition duration-200 shadow-md"
-            : `${className} bg-white hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full shadow-slate-500 transition duration-150 shadow-md`
+            ? "block text-center w-full mt-2 py-2 px-4 text-base font-semibold accent-button rounded-lg hover:shadow-theme-strong transition duration-200 shadow-theme-soft"
+            : `${className} accent-button px-6 py-2 rounded-full font-semibold shadow-theme-soft hover:shadow-theme-strong transition`
         }
       >
         Sign Up
       </button>
     );
 
+  const handleThemeSelect = (nextTheme) => {
+    setTheme(nextTheme);
+    setIsThemeMenuOpen(false);
+  };
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg border-b border-gray-100">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-nav text-[var(--color-nav-text)] shadow-theme-soft border-b border-soft backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link
               to="/"
-              className="text-2xl font-bold text-indigo-600 hover:text-indigo-800 transition duration-150"
+              className="text-2xl font-bold text-[var(--color-text)] hover:text-[var(--color-accent)] transition duration-150"
             >
               Aura
             </Link>
@@ -85,6 +160,60 @@ function NavBar() {
                   {link.name}
                 </NavLink>
               ))}
+
+              <div className="relative" ref={themeMenuRef}>
+                <button
+                  onClick={() => setIsThemeMenuOpen((prev) => !prev)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface)] text-[var(--color-text)] font-semibold shadow-theme-soft hover:shadow-theme-strong transition-all border border-soft"
+                >
+                  <PaintBrushIcon className="h-5 w-5 text-[var(--color-accent)]" />
+                  <span>{activeTheme?.label ?? "Theme"}</span>
+                  <ChevronDownIcon
+                    className={`h-4 w-4 transition-transform ${
+                      isThemeMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isThemeMenuOpen && (
+                  <div className="absolute right-0 mt-3 w-60 rounded-2xl glass-panel py-3 z-20">
+                    <div className="flex items-center justify-between px-4 pb-2 border-b border-soft">
+                      <p className="text-xs font-semibold text-muted uppercase tracking-[0.16em]">
+                        Themes
+                      </p>
+                      <button
+                        onClick={() => {
+                          cycleTheme(1);
+                          setIsThemeMenuOpen(false);
+                        }}
+                        className="p-1.5 rounded-full bg-[var(--color-surface)] hover:bg-[var(--color-card)] transition"
+                        title="Cycle themes"
+                      >
+                        <ArrowPathRoundedSquareIcon className="h-5 w-5 text-[var(--color-accent)]" />
+                      </button>
+                    </div>
+                    <ul className="max-h-64 overflow-y-auto">
+                      {themes.map((theme) => (
+                        <li key={theme.key}>
+                          <button
+                            onClick={() => handleThemeSelect(theme.key)}
+                            className={`w-full text-left px-4 py-2.5 text-sm font-medium rounded-xl transition flex flex-col gap-0.5 ${
+                              theme.key === themeKey
+                                ? "bg-[var(--color-surface)] text-[var(--color-text)] shadow-theme-soft"
+                                : "text-muted hover:bg-[var(--color-surface)] hover:text-[var(--color-text)]"
+                            }`}
+                          >
+                            <span>{theme.label}</span>
+                            <span className="text-xs text-muted">
+                              {theme.description}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
 
               {/* Desktop Action Button: Uses conditional rendering via AuthButton */}
               <AuthButton className="ml-6" />
@@ -134,16 +263,41 @@ function NavBar() {
         </nav>
 
         {/* Mobile Menu Panel */}
-        <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-white`}>
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-100">
+        <div
+          className={`${
+            isOpen ? "block" : "hidden"
+          } md:hidden bg-nav`}
+        >
+          <div className="px-4 pt-3 pb-4 space-y-3 border-t border-soft">
+            <div className="flex items-center justify-between bg-[var(--color-surface)] border border-soft rounded-xl px-3 py-2 shadow-theme-soft">
+              <div>
+                <p className="text-xs uppercase text-muted tracking-wide">
+                  Theme
+                </p>
+                <p className="text-sm font-semibold text-[var(--color-text)]">
+                  {activeTheme?.label ?? "Select Theme"}
+                </p>
+              </div>
+              <select
+                value={themeKey}
+                onChange={(event) => handleThemeSelect(event.target.value)}
+                className="bg-transparent text-sm font-medium text-[var(--color-text)] focus:outline-none"
+              >
+                {themes.map((theme) => (
+                  <option key={theme.key} value={theme.key}>
+                    {theme.label}
+                  </option>
+                ))}
+              </select>
+            </div>
             {navLinks.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.href}
                 className={({ isActive }) =>
                   isActive
-                    ? "block px-3 py-2 rounded-md text-base font-bold text-white bg-indigo-600 transition duration-150"
-                    : "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition duration-150"
+                    ? "block px-4 py-2.5 rounded-xl text-base font-semibold text-[var(--color-accent-contrast)] accent-button shadow-theme-soft transition duration-150"
+                    : "block px-4 py-2.5 rounded-xl text-base font-medium text-[var(--color-text)] bg-[var(--color-surface)] hover:shadow-theme-soft transition duration-150"
                 }
                 onClick={() => setIsOpen(false)}
                 end={link.href === "/"}
@@ -157,12 +311,9 @@ function NavBar() {
           </div>
         </div>
       </header>
-
-      {/* The Modal Component */}
-      <AuthModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAuthSuccess={handleAuthSuccess} // <-- Pass the success handler
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
       />
     </>
   );

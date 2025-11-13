@@ -1,118 +1,184 @@
 import React from "react";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaTwitter, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa6";
 
-// Data for the footer sections
-const footerSections = [
+const columnLinks = [
   {
-    title: "Company",
+    heading: "Product",
     links: [
-      { name: "About Us", href: "/about" },
-      { name: "Careers", href: "/careers" },
-      { name: "Press", href: "/press" },
-      { name: "Blog", href: "/blog" },
+      { label: "How it works", to: "/about" },
+      { label: "Solo practice", to: "/quiz" },
+      { label: "Competition hub", to: "/competepage" },
+      { label: "Roadmap", to: "/about#roadmap" },
     ],
   },
   {
-    title: "Resources",
+    heading: "Resources",
     links: [
-      { name: "Documentation", href: "/docs" },
-      { name: "Support", href: "/support" },
-      { name: "API Status", href: "/api-status" },
-      { name: "Tutorials", href: "/tutorials" },
+      { label: "Success stories", to: "/about#journey" },
+      { label: "Guides", to: "/about#mission" },
+      { label: "Support", to: "/support" },
+      { label: "Contact", to: "/contact" },
     ],
   },
   {
-    title: "Legal",
+    heading: "Company",
     links: [
-      { name: "Privacy Policy", href: "/privacy" },
-      { name: "Terms of Service", href: "/terms" },
-      { name: "Cookie Policy", href: "/cookies" },
-      { name: "Accessibility", href: "/accessibility" },
+      { label: "About", to: "/about" },
+      { label: "Careers", to: "/careers" },
+      { label: "Community", to: "/competepage" },
+      { label: "Press", to: "/press" },
     ],
   },
 ];
 
-const socialLinks = [
-  { icon: FaFacebook, href: "https://facebook.com", label: "Facebook" },
-  { icon: FaTwitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: FaLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
+const socials = [
+  { label: "Twitter", href: "https://twitter.com/", icon: FaTwitter },
+  { label: "Instagram", href: "https://instagram.com/", icon: FaInstagram },
+  { label: "LinkedIn", href: "https://linkedin.com/", icon: FaLinkedin },
+  { label: "GitHub", href: "https://github.com/", icon: FaGithub },
+];
+
+const programHighlights = [
+  {
+    label: "95% satisfaction",
+    description:
+      "Learners report AuraQuiz helps them stay consistently engaged.",
+  },
+  {
+    label: "26k+ sessions",
+    description: "Solo sprints completed this month across the globe.",
+  },
+  {
+    label: "98 mentors",
+    description: "Industry experts guiding streaks, challenges, and meetups.",
+  },
 ];
 
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-white mt-12 border-t border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Top Section: Logo, Newsletter, and Primary Links */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 border-b border-gray-700 pb-10">
-          {/* Column 1: Logo and Tagline */}
-          <div className="md:col-span-2 space-y-4">
-            <h3 className="text-2xl font-bold text-indigo-400">YourApp</h3>
-            <p className="text-gray-400 text-sm">
-              Building the future, one line of code at a time.
+    <footer className="relative ">
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent)]/6 via-transparent to-emerald-400/10" />
+      <div className="absolute inset-0 bg-[var(--color-nav)]/72 backdrop-blur-[40px]" />
+
+      <div className="relative max-w-7xl mx-auto px-6 py-16 space-y-16 text-[var(--color-text)]">
+        <div className="glass-panel rounded-3xl p-10 md:p-12 grid gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
+          <div className="space-y-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface)] border border-soft text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+              Stay in the flow
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold leading-snug">
+              Weekly drops on new quiz topics, community battles, and study
+              hacks—straight to your inbox.
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {programHighlights.map((highlight) => (
+                <div
+                  key={highlight.label}
+                  className="bg-[var(--color-surface)] border border-soft rounded-2xl p-4 shadow-theme-soft"
+                >
+                  <p className="text-sm font-semibold text-[var(--color-accent)] uppercase tracking-[0.25em]">
+                    {highlight.label}
+                  </p>
+                  <p className="mt-2 text-xs text-muted leading-relaxed">
+                    {highlight.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <form className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                placeholder="you@example.com"
+                className="flex-1 rounded-full border border-soft bg-white/85 px-5 py-3 text-[var(--color-text)] shadow-theme-soft focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                required
+              />
+              <button
+                type="submit"
+                className="px-6 py-3 rounded-full accent-button font-semibold shadow-theme-soft hover:shadow-theme-strong transition"
+              >
+                Subscribe
+              </button>
+            </div>
+            <p className="text-xs text-muted">
+              We respect your inbox. Expect one meaningful update each week.
             </p>
+          </form>
+        </div>
+
+        <div className="grid gap-12 lg:grid-cols-[1.3fr_repeat(3,minmax(0,1fr))]">
+          <div className="space-y-6">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-2xl font-extrabold"
+            >
+              <span className="h-10 w-10 rounded-full bg-[var(--color-accent)]/20 border border-soft flex items-center justify-center font-bold text-[var(--color-accent)]">
+                AQ
+              </span>
+              <span>AuraQuiz</span>
+            </Link>
+            <p className="text-sm text-muted max-w-sm leading-relaxed">
+              Designed for modern learners who crave momentum. Practice solo,
+              meet rivals, and keep your engineering instincts sharp.
+            </p>
+            <div className="flex items-center gap-3 text-sm text-muted">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Live match-making active now</span>
+            </div>
           </div>
 
-          {/* Column 2, 3, 4: Navigation Links */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h4 className="text-lg font-semibold mb-4">{section.title}</h4>
-              <ul className="space-y-3">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-gray-400 hover:text-indigo-500 transition duration-150 text-md"
+          {columnLinks.map((column) => (
+            <div key={column.heading} className="space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.32em] text-muted">
+                {column.heading}
+              </h3>
+              <ul className="space-y-3 text-sm">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.to}
+                      className="text-muted hover:text-[var(--color-text)] font-medium transition"
                     >
-                      {link.name}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-
-          {/* Column 5 (or dedicated space): Newsletter/Action */}
-          <div className="md:col-span-1">
-            <h4 className="text-lg font-semibold mb-4">Stay Updated</h4>
-            <p className="text-gray-400 text-sm mb-3">
-              Join our newsletter for weekly updates.
-            </p>
-            <form className="flex">
-              <input
-                type="email"
-                placeholder="Enter email"
-                className="w-full p-2 border border-gray-300 rounded-l-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <button
-                type="submit"
-                className="bg-indigo-600 text-white p-3 text-sm font-semibold rounded-r-md hover:bg-indigo-700 transition duration-150"
-              >
-                Go
-              </button>
-            </form>
-          </div>
         </div>
 
-        {/* Bottom Section: Copyright and Socials */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 space-y-4 md:space-y-0">
-          {/* Copyright */}
-          <p className="text-gray-400 text-lg hover:text-indigo-400 transition duration-150">
-            &copy; {new Date().getFullYear()} YourApp, Inc. All rights reserved.
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between border-t border-soft pt-8">
+          <p className="text-sm text-muted">
+            © {new Date().getFullYear()} AuraQuiz Studio. Crafted with curiosity
+            and caffeine.
           </p>
-
-          {/* Social Media Icons */}
-          <div className="flex space-x-6">
-            {socialLinks.map((link) => (
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
+            <Link to="/privacy" className="hover:text-[var(--color-text)]">
+              Privacy
+            </Link>
+            <span aria-hidden="true">•</span>
+            <Link to="/terms" className="hover:text-[var(--color-text)]">
+              Terms
+            </Link>
+            <span aria-hidden="true">•</span>
+            <Link to="/cookies" className="hover:text-[var(--color-text)]">
+              Cookies
+            </Link>
+          </div>
+          <div className="flex items-center gap-4">
+            {socials.map((social) => (
               <a
-                key={link.label}
-                href={link.href}
+                key={social.label}
+                href={social.href}
                 target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-indigo-700  transition duration-150"
-                aria-label={link.label}
+                rel="noreferrer"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-soft bg-[var(--color-surface)] text-muted hover:text-[var(--color-accent)] hover:shadow-theme-soft transition"
+                aria-label={social.label}
               >
-                <link.icon className="w-8 h-8" />
+                <social.icon className="h-5 w-5" />
               </a>
             ))}
           </div>

@@ -79,7 +79,7 @@ const RegistrationForm = ({ onStartGame }) => {
   };
 
   return (
-    <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-2xl border-t-8 border-indigo-600">
+    <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border-t-8 border-indigo-600">
       <h2 className="text-3xl font-bold text-indigo-700 text-center mb-6">
         Start a New Competition
       </h2>
@@ -88,7 +88,7 @@ const RegistrationForm = ({ onStartGame }) => {
         <div>
           <label
             htmlFor="numPlayers"
-            className="block text-lg font-medium text-gray-700 mb-2"
+            className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Number of Competitors (2-4)
           </label>
@@ -96,7 +96,7 @@ const RegistrationForm = ({ onStartGame }) => {
             id="numPlayers"
             value={numPlayers}
             onChange={handleNumPlayersChange}
-            className="w-full py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+            className="w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-lg"
           >
             <option value={2}>2</option>
             <option value={3}>3</option>
@@ -105,7 +105,7 @@ const RegistrationForm = ({ onStartGame }) => {
         </div>
 
         {/* Player Name Inputs */}
-        <h3 className="text-xl font-semibold text-gray-800 pt-2">
+        <h3 className="text-xl font-semibold text-gray-800 dark:text-white pt-2">
           Enter Names:
         </h3>
         {Array.from({ length: numPlayers }).map((_, index) => (
@@ -115,7 +115,7 @@ const RegistrationForm = ({ onStartGame }) => {
             placeholder={`Name for Player ${index + 1}`}
             value={playerNames[index] || ""}
             onChange={(e) => handleNameChange(index, e.target.value)}
-            className="w-full py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             required
           />
         ))}
@@ -232,18 +232,18 @@ const GameBoard = ({ initialPlayers, onEndGame }) => {
   // Handle game over state
   if (isGameOver) {
     return (
-      <div className="text-center p-10 bg-white rounded-xl shadow-2xl border-t-8 border-red-600 max-w-lg mx-auto">
+      <div className="text-center p-10 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border-t-8 border-red-600 max-w-lg mx-auto">
         <h2 className="text-4xl font-extrabold text-red-700 mb-4">
           Game Over!
         </h2>
         <h3 className="text-5xl font-black text-indigo-600 mb-6">
           🏆 {winner.name} WINS! 🏆
         </h3>
-        <p className="text-xl text-gray-700 mb-8">
+        <p className="text-xl text-gray-700 dark:text-gray-300 mb-8">
           Final Score: {winner.score}
         </p>
 
-        <ul className="space-y-2 mb-8 text-lg">
+        <ul className="space-y-2 mb-8 text-lg ">
           {[...players]
             .sort((a, b) => b.score - a.score)
             .map((p) => (
@@ -251,7 +251,7 @@ const GameBoard = ({ initialPlayers, onEndGame }) => {
                 key={p.id}
                 className={`font-semibold ${
                   p.id === winner.id ? "text-indigo-600" : "text-gray-600"
-                }`}
+                } dark:text-gray-300`}
               >
                 {p.name}: {p.score} points
               </li>
@@ -273,11 +273,11 @@ const GameBoard = ({ initialPlayers, onEndGame }) => {
     // This player has finished. We will move to the next player via `moveToNextTurn` logic.
     // We render a message while we transition.
     return (
-      <div className="text-center p-10 bg-white rounded-xl shadow-2xl border-t-8 border-yellow-600 max-w-lg mx-auto">
+      <div className="text-center p-10 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border-t-8 border-yellow-600 max-w-lg mx-auto">
         <h2 className="text-3xl font-extrabold text-yellow-700 mb-4">
           {currentPlayer.name} has finished their questions!
         </h2>
-        <p className="text-xl text-gray-700 mb-8">
+        <p className="text-xl text-gray-700 dark:text-gray-300 mb-8">
           Moving to the next competitor...
         </p>
       </div>
@@ -287,34 +287,36 @@ const GameBoard = ({ initialPlayers, onEndGame }) => {
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       {/* Scoreboard */}
-      <div className="bg-white p-4 rounded-xl shadow-md flex justify-around border-b-4 border-gray-200">
+      <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md flex justify-around border-b-4 border-gray-200 dark:border-gray-700">
         {players.map((p) => (
           <div
             key={p.id}
             className={`text-center p-2 rounded-lg transition duration-300 ${
               p.id === currentPlayer.id
-                ? "bg-indigo-100 ring-2 ring-indigo-500"
+                ? "bg-indigo-100 dark:bg-indigo-900 ring-2 ring-indigo-500"
                 : ""
             }`}
           >
-            <p className="font-bold text-lg text-gray-800">{p.name}</p>
+            <p className="font-bold text-lg text-gray-800 dark:text-white">
+              {p.name}
+            </p>
             <p className="text-indigo-600 font-extrabold text-2xl">{p.score}</p>
           </div>
         ))}
       </div>
 
       {/* Question Card */}
-      <div className="bg-white p-8 rounded-xl shadow-2xl border-t-4 border-indigo-500">
-        <p className="text-xl font-semibold text-gray-700 mb-4">
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border-t-4 border-indigo-500">
+        <p className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
           Question {currentPlayer.currentQuestionIndex + 1} of{" "}
           {maxPlayerQuestions} (for {currentPlayer.name})
         </p>
-        <p className="text-2xl font-bold text-gray-900 mb-6">
+        <p className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           {currentQuestion.question}
         </p>
 
         {/* Current Player Indicator */}
-        <div className="p-3 bg-indigo-50 text-indigo-700 font-bold rounded-lg mb-6 text-center">
+        <div className="p-3 bg-indigo-50 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 font-bold rounded-lg mb-6 text-center">
           It's {currentPlayer.name}'s turn!
         </div>
 
@@ -342,7 +344,7 @@ const GameBoard = ({ initialPlayers, onEndGame }) => {
               className={`w-full text-left py-3 px-4 rounded-lg border-2 font-medium transition duration-150 ${
                 index === selectedOptionIndex && !message
                   ? "border-indigo-500 bg-indigo-50 text-indigo-700 ring-2 ring-indigo-500"
-                  : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                  : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
               } ${
                 message && index === currentQuestion.correctAnswerIndex
                   ? "border-green-500 bg-green-100 text-green-700" // Highlight correct answer after submission
@@ -389,7 +391,7 @@ function CompetePage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gray-50 pt-20 pb-16 px-4 flex justify-center items-start">
+    <div className="min-h-[calc(100vh-64px)] bg-gray-50 dark:bg-gray-900 pt-20 pb-16 px-4 flex justify-center items-start">
       {players ? (
         // Show Game Board if players exist
         <GameBoard initialPlayers={players} onEndGame={handleEndGame} />

@@ -1,0 +1,38 @@
+/* ================================
+   Custom Toast Styles (Facebook-like)
+=================================== */
+
+.custom-toast {
+  background: #1877f2; /* Facebook blue */
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(31, 14, 14, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: toast-slide-in 0.3s ease forwards;
+}
+
+/* Success variant */
+.custom-toast.success {
+  background: #42b72a; /* green */
+}
+
+/* Error variant */
+.custom-toast.error {
+  background: #f02849; /* red */
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
