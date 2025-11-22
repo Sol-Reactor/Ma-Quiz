@@ -16,6 +16,7 @@ function LogIn() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,6 +45,11 @@ function LogIn() {
       } else {
         if (!formData.username) {
           setError("Username is required");
+          setLoading(false);
+          return;
+        }
+        if (formData.password !== formData.confirmPassword) {
+          setError("Passwords do not match");
           setLoading(false);
           return;
         }
@@ -178,6 +184,31 @@ function LogIn() {
             <FaLock className="absolute left-3 top-3 text-gray-400 z-10" />
           </div>
 
+          {!isLogin && (
+            <div className="relative">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder=" "
+                required
+                minLength={6}
+                className="peer w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent z-0"
+              />
+              <label
+                htmlFor="confirmPassword"
+                className="absolute left-9 -top-2 bg-white px-1 text-xs text-indigo-600 transition-all
+                          peer-placeholder-shown:top-3 peer-placeholder-shown:left-10 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400
+                          peer-focus:-top-2 peer-focus:left-9 peer-focus:text-indigo-600 peer-focus:text-xs"
+              >
+                Confirm Password
+              </label>
+              <FaLock className="absolute left-3 top-3 text-gray-400 z-10" />
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}
@@ -192,7 +223,12 @@ function LogIn() {
             onClick={() => {
               setIsLogin(true);
               setError("");
-              setFormData({ username: "", email: "", password: "" });
+              setFormData({
+                username: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+              });
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-t-lg border-b-4 font-medium transition-colors duration-200 ${
               isLogin
@@ -207,7 +243,12 @@ function LogIn() {
             onClick={() => {
               setIsLogin(false);
               setError("");
-              setFormData({ username: "", email: "", password: "" });
+              setFormData({
+                username: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+              });
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-t-lg border-b-4 font-medium transition-colors duration-200 ${
               !isLogin
