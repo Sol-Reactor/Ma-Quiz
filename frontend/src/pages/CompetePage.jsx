@@ -250,8 +250,10 @@ const GameBoard = ({ initialPlayers, onEndGame }) => {
               <li
                 key={p.id}
                 className={`font-semibold ${
-                  p.id === winner.id ? "text-indigo-600" : "text-gray-600"
-                } dark:text-gray-300`}
+                  p.id === winner.id
+                    ? "text-indigo-600 dark:text-indigo-600"
+                    : "text-gray-600 dark:text-gray-300"
+                }`}
               >
                 {p.name}: {p.score} points
               </li>

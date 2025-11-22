@@ -88,14 +88,14 @@ const teamSpotlight = [
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=320&q=80",
   },
   {
-    name: "Dawit Mengistu",
+    name: "Selam Abebe",
     role: "Lead Engineer",
     focus: "Builds the adaptive scoring engine and analytics pipelines.",
     avatar:
       "https://images.unsplash.com/photo-1511485977113-f34c92461ad9?auto=format&fit=crop&w=320&q=80",
   },
   {
-    name: "Selam Abebe",
+    name: "Dawit Mengistu",
     role: "Community Architect",
     focus: "Hosts live retros, competitions, and accountability squads.",
     avatar:

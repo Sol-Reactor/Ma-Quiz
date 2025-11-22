@@ -1,5 +1,5 @@
 // src/layouts/MainLayout.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import AuthModal from "./AuthModal";
@@ -8,8 +8,6 @@ import { AuthModalProvider } from "../../context/AuthModalContext";
 
 function MainLayout() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const navigate = useNavigate(); // For AuthModal's onAuthSuccess
-
   const handleAuthSuccess = () => {
     setIsAuthModalOpen(false); // Just close the modal, navigation is handled by AuthModal
   };

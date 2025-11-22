@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Quiz from "../components/quiz/Quiz";
 import TimedChallenge from "../components/quiz/TimedChallenge";
 import { useQuiz } from "../context/QuizContext";
-import { useAuth } from "../context/AuthContext";
 import { useAuthModal } from "../context/AuthModalContext";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
@@ -48,7 +47,6 @@ const curatedTopicPreview = [
 
 function QuizPage() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const { setIsModalOpen } = useAuthModal();
   const {
     quizStatus,
@@ -66,13 +64,6 @@ function QuizPage() {
   const [gameMode, setGameMode] = useState(null);
   const [showQuizSelection, setShowQuizSelection] = useState(false);
   const [timedSettings, setTimedSettings] = useState({ duration: 300 });
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setIsModalOpen(true);
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate, setIsModalOpen]);
 
   useEffect(() => {
     fetchQuizzes();
@@ -132,10 +123,7 @@ function QuizPage() {
   if (!gameMode) {
     return (
       <div className={`${pageContainerClass} flex items-center justify-center`}>
-        <GameModeSelector
-          onSelectMode={handleModeSelect}
-          quizzes={quizzes}
-        />
+        <GameModeSelector onSelectMode={handleModeSelect} quizzes={quizzes} />
       </div>
     );
   }
@@ -177,7 +165,9 @@ function QuizPage() {
   if (gameMode === "solo") {
     if (quizStatus === "start") {
       return (
-        <div className={`${pageContainerClass} flex items-center justify-center`}>
+        <div
+          className={`${pageContainerClass} flex items-center justify-center`}
+        >
           <QuizStartupScreen
             quiz={currentQuiz}
             questionCount={quizQuestions.length}
@@ -200,7 +190,9 @@ function QuizPage() {
   if (gameMode === "timed") {
     if (quizStatus === "start") {
       return (
-        <div className={`${pageContainerClass} flex items-center justify-center`}>
+        <div
+          className={`${pageContainerClass} flex items-center justify-center`}
+        >
           <TimedQuizIntro
             quiz={currentQuiz}
             questionCount={quizQuestions.length}
@@ -274,22 +266,32 @@ const GameModeSelector = ({ onSelectMode, quizzes }) => {
             Pick a mode, unlock a topic, and start your next streak.
           </h1>
           <p className="text-muted max-w-2xl">
-            AuraQuiz curates the perfect flow whether you want calm focus, a timed
-            rush, or full-on competitions. Solo Focus always unlocks the entire
-            topic library so you can sample new playlists before sprinting.
+            AuraQuiz curates the perfect flow whether you want calm focus, a
+            timed rush, or full-on competitions. Solo Focus always unlocks the
+            entire topic library so you can sample new playlists before
+            sprinting.
           </p>
           <ul className="space-y-3 text-sm text-muted">
             <li className="flex items-start gap-3">
               <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-[var(--color-accent)]" />
-              <span>Solo Focus exposes every playlist with descriptions and estimated time.</span>
+              <span>
+                Solo Focus exposes every playlist with descriptions and
+                estimated time.
+              </span>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-              <span>Timed Sprint records your pace and auto-submits when the countdown hits zero.</span>
+              <span>
+                Timed Sprint records your pace and auto-submits when the
+                countdown hits zero.
+              </span>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
-              <span>Competition mode matches you with active learners in under 30 seconds.</span>
+              <span>
+                Competition mode matches you with active learners in under 30
+                seconds.
+              </span>
             </li>
           </ul>
         </div>
@@ -309,7 +311,8 @@ const GameModeSelector = ({ onSelectMode, quizzes }) => {
           Choose your challenge mode
         </h2>
         <p className="text-muted mt-2">
-          Every selection syncs to your streaks, progress tracker, and leaderboards.
+          Every selection syncs to your streaks, progress tracker, and
+          leaderboards.
         </p>
       </div>
 
@@ -497,30 +500,30 @@ const QuizSelector = ({ quizzes, onSelectQuiz, loading, onBack }) => {
       ) : quizzes.length === 0 ? (
         <p className="text-center text-muted py-8">No quizzes available yet.</p>
       ) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {quizzes.map((quiz) => (
-          <button
-            key={quiz.id}
-            onClick={() => onSelectQuiz(quiz.id)}
-            className="text-left bg-[var(--color-surface)] border border-soft rounded-3xl p-6 hover:border-[var(--color-accent)]/60 hover:shadow-theme-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
-          >
-            <h2 className="text-2xl font-bold text-[var(--color-text)] mb-2">
-              {quiz.title}
-            </h2>
-            <p className="text-sm text-muted mb-4">
-              {quiz.description ||
-                topicDescriptions[quiz.topic] ||
-                "A focused playlist of micro-challenges and recap notes to build momentum."}
-            </p>
-            <div className="flex items-center justify-between text-sm text-muted">
-              <span className="px-3 py-1 rounded-full bg-[var(--color-accent)]/15 text-[var(--color-accent)] font-semibold">
-                {quiz.topic || "General"}
-              </span>
-              <span>{quiz.question_count || 0} questions</span>
-            </div>
-          </button>
-        ))}
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {quizzes.map((quiz) => (
+            <button
+              key={quiz.id}
+              onClick={() => onSelectQuiz(quiz.id)}
+              className="text-left bg-[var(--color-surface)] border border-soft rounded-3xl p-6 hover:border-[var(--color-accent)]/60 hover:shadow-theme-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
+            >
+              <h2 className="text-2xl font-bold text-[var(--color-text)] mb-2">
+                {quiz.title}
+              </h2>
+              <p className="text-sm text-muted mb-4">
+                {quiz.description ||
+                  topicDescriptions[quiz.topic] ||
+                  "A focused playlist of micro-challenges and recap notes to build momentum."}
+              </p>
+              <div className="flex items-center justify-between text-sm text-muted">
+                <span className="px-3 py-1 rounded-full bg-[var(--color-accent)]/15 text-[var(--color-accent)] font-semibold">
+                  {quiz.topic || "General"}
+                </span>
+                <span>{quiz.question_count || 0} questions</span>
+              </div>
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );

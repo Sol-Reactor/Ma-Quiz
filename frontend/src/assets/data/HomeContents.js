@@ -61,7 +61,7 @@ const testimonials = [
     avatar: image2,
   },
   {
-    name: "Michael Tesfaye",
+    name: "Michael Getachew",
     role: "Software Engineering Major",
     message:
       "“Timed sprints feel like mini-interviews. It’s the best prep I’ve had before internship rounds.”",

@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import { quizAPI } from "../services/api";
 import { useAuth } from "./AuthContext";
 
@@ -39,7 +45,7 @@ export const QuizProvider = ({ children }) => {
       setQuizzes(response.quizzes || []);
     } catch (err) {
       setError(err.message);
-      console.error('Error fetching quizzes:', err);
+      console.error("Error fetching quizzes:", err);
     } finally {
       setLoading(false);
     }
@@ -52,15 +58,17 @@ export const QuizProvider = ({ children }) => {
       setError(null);
       const response = await quizAPI.getQuizById(quizId);
       setCurrentQuiz(response.quiz);
-      
+
       // Transform questions to match frontend format
       const formattedQuestions = response.questions.map((q) => ({
         id: q.id,
         question: q.question_text || q.question,
         options: Array.isArray(q.options) ? q.options : [],
-        topic: q.topic || 'General',
+        topic: q.topic || "General",
+        explanation: q.explanation || "",
+        correctAnswer: q.correctAnswer, // Pass the correct answer to the frontend state
       }));
-      
+
       setQuizQuestions(formattedQuestions);
       setCurrentQuestionIndex(0);
       setScore(0);
@@ -68,7 +76,7 @@ export const QuizProvider = ({ children }) => {
       return { success: true };
     } catch (err) {
       setError(err.message);
-      console.error('Error fetching quiz:', err);
+      console.error("Error fetching quiz:", err);
       return { success: false, error: err.message };
     } finally {
       setLoading(false);
@@ -84,7 +92,7 @@ export const QuizProvider = ({ children }) => {
 
   const startQuiz = useCallback(() => {
     if (quizQuestions.length === 0) {
-      setError('No questions available. Please select a quiz first.');
+      setError("No questions available. Please select a quiz first.");
       return;
     }
     setCurrentQuestionIndex(0);
@@ -103,25 +111,32 @@ export const QuizProvider = ({ children }) => {
       setSelectedOption(option);
       setIsAnswerLocked(true);
 
-      // Store user's answer (replace if already answered this question)
+      const isCorrect = option === currentQuestion.correctAnswer;
+
+      // Store user's answer
       const answer = {
         questionId: currentQuestion.id,
         selectedOption: option,
+        isCorrect,
       };
       setUserAnswers((prev) => {
-        const filtered = prev.filter(a => a.questionId !== currentQuestion.id);
+        const filtered = prev.filter(
+          (a) => a.questionId !== currentQuestion.id
+        );
         return [...filtered, answer];
       });
 
-      // Note: We don't know if it's correct until we submit to backend
-      // For now, we'll just store the answer
+      // Update score if the answer is correct
+      if (isCorrect) {
+        setScore((prevScore) => prevScore + 1);
+      }
     },
     [currentQuestion, isAnswerLocked, quizStatus]
   );
 
   const submitQuiz = useCallback(async () => {
     if (!currentQuiz || !isAuthenticated) {
-      setError('You must be logged in to submit quiz results');
+      setError("You must be logged in to submit quiz results");
       setQuizStatus("finished");
       return;
     }
@@ -133,7 +148,7 @@ export const QuizProvider = ({ children }) => {
       setQuizStatus("finished");
     } catch (err) {
       setError(err.message);
-      console.error('Error submitting quiz:', err);
+      console.error("Error submitting quiz:", err);
       setQuizStatus("finished");
     } finally {
       setLoading(false);
@@ -164,13 +179,16 @@ export const QuizProvider = ({ children }) => {
     setError(null);
   }, []);
 
-  const selectQuiz = useCallback(async (quizId) => {
-    const result = await fetchQuizById(quizId);
-    if (result.success) {
-      setQuizStatus("start");
-    }
-    return result;
-  }, [fetchQuizById]);
+  const selectQuiz = useCallback(
+    async (quizId) => {
+      const result = await fetchQuizById(quizId);
+      if (result.success) {
+        setQuizStatus("start");
+      }
+      return result;
+    },
+    [fetchQuizById]
+  );
 
   // --- Context Value ---
   const value = {
@@ -198,9 +216,5 @@ export const QuizProvider = ({ children }) => {
     submitQuiz,
   };
 
-  return (
-    <QuizContext.Provider value={value}>
-      {children}
-    </QuizContext.Provider>
-  );
+  return <QuizContext.Provider value={value}>{children}</QuizContext.Provider>;
 };

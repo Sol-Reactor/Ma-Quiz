@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { dashboardAPI } from "../services/api";
 import { useQuiz } from "../context/QuizContext";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function UserDashboard() {
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { selectQuiz } = useQuiz();
   const [dashboardData, setDashboardData] = useState(null);
@@ -14,12 +12,8 @@ function UserDashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/signup");
-      return;
-    }
     loadDashboard();
-  }, [isAuthenticated, navigate]);
+  }, []);
 
   const loadDashboard = async () => {
     try {

@@ -26,7 +26,8 @@ export async function setupDatabase() {
                 email VARCHAR(255) UNIQUE NOT NULL,
                 password_hash VARCHAR(255) NOT NULL,
                 role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('admin', 'user')),
-                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                avatar_url VARCHAR(255)
             );
         `);
 
@@ -39,6 +40,19 @@ export async function setupDatabase() {
                     WHERE table_name = 'users' AND column_name = 'role'
                 ) THEN
                     ALTER TABLE users ADD COLUMN role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('admin', 'user'));
+                END IF;
+            END $$;
+        `);
+
+        // Add avatar_url column if it doesn't exist
+        await client.query(`
+            DO $$
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'users' AND column_name = 'avatar_url'
+                ) THEN
+                    ALTER TABLE users ADD COLUMN avatar_url VARCHAR(255);
                 END IF;
             END $$;
         `);
@@ -70,16 +84,30 @@ export async function setupDatabase() {
 
         // Questions table
         await client.query(`
-            CREATE TABLE IF NOT EXISTS questions (
-                id SERIAL PRIMARY KEY,
-                quiz_id INTEGER NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
-                question_text TEXT NOT NULL,
-                options JSONB NOT NULL,
-                correct_answer TEXT NOT NULL,
-                topic VARCHAR(100),
-                question_order INTEGER DEFAULT 0,
-                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-            );
+      CREATE TABLE IF NOT EXISTS questions (
+        id SERIAL PRIMARY KEY,
+        quiz_id INTEGER NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
+        question_text TEXT NOT NULL,
+        options JSONB NOT NULL,
+        correct_answer TEXT NOT NULL,
+        explanation TEXT,  -- Added explanation column
+        topic VARCHAR(100),
+        question_order INTEGER DEFAULT 0,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+        // Add explanation column if it doesn't exist
+        await client.query(`
+            DO $$
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'questions' AND column_name = 'explanation'
+                ) THEN
+                    ALTER TABLE questions ADD COLUMN explanation TEXT;
+                END IF;
+            END $$;
         `);
 
         // Quiz results table

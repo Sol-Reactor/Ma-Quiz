@@ -5,7 +5,7 @@ import { adminAPI } from "../services/api";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function AdminDashboard() {
-  const { isAdmin, isAuthenticated } = useAuth();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("stats");
   const [stats, setStats] = useState(null);
@@ -15,16 +15,12 @@ function AdminDashboard() {
   const [showCreateQuiz, setShowCreateQuiz] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/signup");
-      return;
-    }
     if (!isAdmin) {
       navigate("/dashboard");
       return;
     }
     loadData();
-  }, [isAdmin, isAuthenticated, navigate]);
+  }, [isAdmin, navigate]);
 
   const loadData = async () => {
     try {
@@ -535,6 +531,7 @@ const ActivitiesTab = ({ activities }) => {
                 <tr key={result.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {result.username}
+.
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {result.quiz_title}

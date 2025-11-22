@@ -15,7 +15,7 @@ const MAX_AVATAR_SIZE_MB = 3;
 const MAX_AVATAR_SIZE_BYTES = MAX_AVATAR_SIZE_MB * 1024 * 1024;
 
 function Profile() {
-  const { isAuthenticated, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,11 +25,6 @@ function Profile() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/");
-      return;
-    }
-
     const fetchProfile = async () => {
       try {
         setLoading(true);
@@ -53,7 +48,7 @@ function Profile() {
     };
 
     fetchProfile();
-  }, [isAuthenticated, logout, navigate]);
+  }, [logout, navigate]);
 
   const avatarStorageKey = useMemo(() => {
     if (!profile?.id) return null;

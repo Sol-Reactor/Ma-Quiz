@@ -4,7 +4,7 @@ import pool from '../db.js';
 export const getAllQuizzes = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT q.id, q.title, q.description, q.topic, 
+      `SELECT q.*,
               COUNT(qs.id) as question_count,
               q.created_at,
               u.username as created_by_username
@@ -29,8 +29,8 @@ export const getQuizById = async (req, res) => {
 
     // Get quiz details
     const quizResult = await pool.query(
-      `SELECT q.id, q.title, q.description, q.topic, q.created_at, 
-              u.username as created_by_username
+      `SELECT q.*,q.created_at, 
+      u.username as created_by_username
        FROM quizzes q
        LEFT JOIN users u ON q.created_by = u.id
        WHERE q.id = $1`,
@@ -43,21 +43,23 @@ export const getQuizById = async (req, res) => {
 
     const quiz = quizResult.rows[0];
 
-    // Get questions for this quiz (without revealing correct answers)
+    // Get questions for this quiz (including correct answers for immediate feedback)
     const questionsResult = await pool.query(
-      `SELECT id, question_text, options, topic, question_order
+      `SELECT id, question_text, options, topic, question_order, explanation, correct_answer
        FROM questions
        WHERE quiz_id = $1
        ORDER BY question_order, id`,
       [id]
     );
 
-    // Format questions for client (exclude correct_answer from options)
+    // Format questions for client
     const questions = questionsResult.rows.map(q => ({
       id: q.id,
       question: q.question_text,
       options: q.options, // Options array as stored
       topic: q.topic,
+      explanation: q.explanation,
+      correctAnswer: q.correct_answer,
     }));
 
     res.json({
@@ -66,6 +68,7 @@ export const getQuizById = async (req, res) => {
         title: quiz.title,
         description: quiz.description,
         topic: quiz.topic,
+        explanation: quiz.explanation,
         created_by: quiz.created_by_username,
       },
       questions,

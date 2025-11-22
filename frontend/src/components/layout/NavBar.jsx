@@ -10,6 +10,7 @@ import {
   ArrowPathRoundedSquareIcon,
 } from "@heroicons/react/24/outline";
 import { useTheme } from "../../context/ThemeContext";
+import { FaSignOutAlt } from "react-icons/fa";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,8 +111,9 @@ function NavBar() {
           className={`${
             isMobile ? "flex-1 justify-center" : ""
           } inline-flex items-center justify-center px-4 py-2 rounded-full bg-[var(--color-surface)] text-[var(--color-text)] font-semibold shadow-theme-soft hover:shadow-theme-strong transition-all`}
+          title="Log Out" // Add this line
         >
-          Logout
+          <FaSignOutAlt />
         </button>
       </div>
     ) : (
@@ -145,6 +147,9 @@ function NavBar() {
               className="text-2xl font-bold text-[var(--color-text)] hover:text-[var(--color-accent)] transition duration-150"
             >
               Aura
+              <span className="text-indigo-600 hover:text-[var(--color-accent2)] transition duration-150">
+                Quest
+              </span>
             </Link>
 
             <div className="hidden md:flex space-x-2 lg:space-x-8 items-center">
@@ -263,11 +268,7 @@ function NavBar() {
         </nav>
 
         {/* Mobile Menu Panel */}
-        <div
-          className={`${
-            isOpen ? "block" : "hidden"
-          } md:hidden bg-nav`}
-        >
+        <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-nav`}>
           <div className="px-4 pt-3 pb-4 space-y-3 border-t border-soft">
             <div className="flex items-center justify-between bg-[var(--color-surface)] border border-soft rounded-xl px-3 py-2 shadow-theme-soft">
               <div>
@@ -313,7 +314,7 @@ function NavBar() {
       </header>
       <ProfileModal
         isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
+        onClose={() => setIsProfileModalOpen(!isProfileModalOpen)}
       />
     </>
   );

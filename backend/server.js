@@ -4,11 +4,12 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import quizRoutes from './quizRoutes.js';
+import quizRoutes from './routes/quizRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import { setupDatabase } from './db.js';
+
 
 // Load environment variables
 dotenv.config();
@@ -53,6 +54,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 })); // Enable Cross-Origin Resource Sharing
+
 app.use(morgan('dev')); // Log HTTP requests in dev format
 app.use(express.json()); // To parse JSON bodies
 app.use(express.urlencoded({ extended: false })); // To parse URL-encoded bodies

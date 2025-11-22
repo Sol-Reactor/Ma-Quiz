@@ -1,5 +1,3 @@
-import React from 'react';
-
 const LoadingSpinner = () => {
   return (
     <div className="flex justify-center items-center">
@@ -9,4 +7,3 @@ const LoadingSpinner = () => {
 };
 
 export default LoadingSpinner;
-

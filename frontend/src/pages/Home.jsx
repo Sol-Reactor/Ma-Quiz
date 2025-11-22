@@ -38,7 +38,7 @@ function Home() {
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface)] border border-soft text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               Study studio for doers
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[var(--color-text)] leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#00FFFF] leading-tight ml-4">
               Level up your engineering instincts with streak-friendly quiz
               adventures.
             </h1>
@@ -65,7 +65,7 @@ function Home() {
               {highlightStats.map((metric) => (
                 <div
                   key={metric.label}
-                  className="bg-[var(--color-surface)] border border-soft rounded-2xl p-4 text-center shadow-theme-soft"
+                  className="bg-[var(--color-surface)] border border-soft rounded-2xl p-4 text-center shadow-theme-soft  hover:shadow-theme-strong transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02]"
                 >
                   <span className="block text-2xl font-extrabold text-[var(--color-text)]">
                     {metric.value}
@@ -78,14 +78,14 @@ function Home() {
             </div>
           </div>
           <div className="relative">
-            <div className="absolute -top-6 -right-6 h-full w-full rounded-3xl bg-[var(--color-accent)]/20 blur-2xl" />
+            <div className="absolute -top-2 -right-6 h-full w-full rounded-3xl bg-[var(--color-accent)]/20 blur-2xl" />
             <img
               src="https://images.unsplash.com/photo-1551292831-023188e78222?auto=format&fit=crop&w=1100&q=85"
               alt="Learners collaborating on laptops in a bright studio"
               className="relative z-10 w-full rounded-3xl border border-soft shadow-theme-strong object-cover max-h-[480px]"
               loading="lazy"
             />
-            <div className="absolute -bottom-10 left-8 bg-[var(--color-nav)] border border-soft rounded-2xl shadow-theme-soft px-6 py-4 text-sm text-muted">
+            <div className="absolute -bottom-20 mt-6 left-8 bg-[var(--color-nav)] border border-soft rounded-2xl shadow-theme-soft px-6 py-4 text-sm text-muted">
               🎯 Average completion rate increased by 48% for learners who use
               timed sprints twice a week.
             </div>
@@ -240,7 +240,7 @@ function Home() {
             {testimonials.map((person) => (
               <div
                 key={person.name}
-                className="bg-[var(--color-surface)] border border-soft rounded-2xl p-6 text-left shadow-theme-soft transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-theme-strong"
+                className="bg-[var(--color-surface)] border border-soft rounded-2xl p-6 text-left shadow-theme-soft transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-theme-colorful"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <img
