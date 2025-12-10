@@ -21,7 +21,7 @@
   "dev": "nodemon server.js",
   "seed": "node seed.js",
   "seed-admin": "node seed-admin.js"
-}
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sol-Reactor/Ma-Quiz.git"
