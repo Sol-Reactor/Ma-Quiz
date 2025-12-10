@@ -173,7 +173,7 @@ const About = () => {
                 feedback, and peers to grow with. Here’s how we show up.
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-4 min-w-[220px]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 min-w-0 w-full sm:min-w-[220px]">
               {[
                 { label: "Learners coached", value: "12k+" },
                 { label: "Questions crafted", value: "4.8k" },

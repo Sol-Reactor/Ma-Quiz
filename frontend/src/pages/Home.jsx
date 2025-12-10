@@ -38,7 +38,7 @@ function Home() {
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface)] border border-soft text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               Study studio for doers
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#00FFFF] leading-tight ml-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
               Level up your engineering instincts with streak-friendly quiz
               adventures.
             </h1>
@@ -61,16 +61,16 @@ function Home() {
                 Browse live battles
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-6">
               {highlightStats.map((metric) => (
                 <div
                   key={metric.label}
-                  className="bg-[var(--color-surface)] border border-soft rounded-2xl p-4 text-center shadow-theme-soft  hover:shadow-theme-strong transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02]"
+                  className="bg-[var(--color-surface)] border border-soft rounded-2xl p-4 sm:p-4 text-center shadow-theme-soft hover:shadow-theme-strong transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.02]"
                 >
-                  <span className="block text-2xl font-extrabold text-[var(--color-text)]">
+                  <span className="block text-2xl sm:text-2xl font-extrabold text-[var(--color-text)]">
                     {metric.value}
                   </span>
-                  <span className="text-xs uppercase tracking-[0.25em] text-muted">
+                  <span className="text-xs uppercase tracking-[0.2em] sm:tracking-[0.25em] text-muted">
                     {metric.label}
                   </span>
                 </div>

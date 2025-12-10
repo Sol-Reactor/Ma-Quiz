@@ -147,7 +147,7 @@ function NavBar() {
               className="text-2xl font-bold text-[var(--color-text)] hover:text-[var(--color-accent)] transition duration-150"
             >
               Aura
-              <span className="text-indigo-600 hover:text-[var(--color-accent2)] transition duration-150">
+              <span className="text-[var(--color-accent)] hover:text-[var(--color-accent2)] transition duration-150">
                 Quest
               </span>
             </Link>
