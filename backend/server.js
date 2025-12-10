@@ -70,9 +70,8 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`Server running on port ${PORT}`);
-  // Set up the database tables on startup
   try {
     await setupDatabase();
     console.log('Database setup completed');
