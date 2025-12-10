@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useAuthModal } from "../../context/AuthModalContext";
+
 import ProfileModal from "./ProfileModal";
 import toast from "react-hot-toast";
 import {
@@ -20,7 +20,7 @@ function NavBar() {
   const { themeKey, setTheme, themes, cycleTheme } = useTheme();
   const navigate = useNavigate();
   const themeMenuRef = useRef(null);
-  const { setIsModalOpen } = useAuthModal();
+
   const activeTheme = themes.find((item) => item.key === themeKey);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ function NavBar() {
       <button
         onClick={() => {
           if (isMobile) setIsOpen(false);
-          setIsModalOpen(true); // Use context's setIsModalOpen
+          navigate("/signup");
         }}
         className={
           isMobile

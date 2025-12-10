@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthModal } from "../context/AuthModalContext.jsx";
+
 import { useAuth } from "../context/AuthContext.jsx";
 import {
   highlightStats,
@@ -14,7 +14,7 @@ import {
 
 function Home() {
   const navigate = useNavigate();
-  const { setIsModalOpen } = useAuthModal();
+
   const { isAuthenticated } = useAuth();
 
   const handleStart = () => {
@@ -22,7 +22,7 @@ function Home() {
       navigate("/quiz");
       return;
     }
-    setIsModalOpen(true);
+    navigate("/signin");
   };
 
   return (

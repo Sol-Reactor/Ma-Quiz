@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Quiz from "../components/quiz/Quiz";
 import TimedChallenge from "../components/quiz/TimedChallenge";
 import { useQuiz } from "../context/QuizContext";
-import { useAuthModal } from "../context/AuthModalContext";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
 const pageContainerClass =
@@ -47,7 +46,6 @@ const curatedTopicPreview = [
 
 function QuizPage() {
   const navigate = useNavigate();
-  const { setIsModalOpen } = useAuthModal();
   const {
     quizStatus,
     quizQuestions,
