@@ -11,6 +11,8 @@ const Question = ({
     ? questionData.options
     : [];
 
+  const optionLabels = ['A', 'B', 'C', 'D'];
+
   return (
     <div className="glass-panel p-8 rounded-3xl space-y-8">
       {questionData.topic && (
@@ -23,48 +25,55 @@ const Question = ({
         {questionData.question}
       </h2>
 
-      {/* Options Grid */}
+      {/* Options with Circular Buttons */}
       <div className="space-y-4">
         {options.map((option, index) => {
           const isSelected = option === selectedOption;
           const isCorrect = option === questionData.correctAnswer;
+          const label = optionLabels[index] || String.fromCharCode(65 + index);
 
-          let optionClasses =
-            "p-4 border border-soft rounded-xl transition duration-200 text-base md:text-lg font-medium";
+          let buttonClasses = "flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition duration-200 border-2";
+          let containerClasses = "flex items-center gap-4 p-4 rounded-xl transition duration-200 border border-soft";
 
           if (isAnswerLocked) {
             if (isSelected) {
               if (isCorrect) {
                 // Correct answer, selected
-                optionClasses +=
-                  " bg-green-500 text-white border-green-700 cursor-not-allowed";
+                buttonClasses += " bg-green-500 text-white border-green-600";
+                containerClasses += " bg-green-500/10 border-green-500/40";
               } else {
                 // Incorrect answer, selected
-                optionClasses +=
-                  " bg-red-500 text-white border-red-700 cursor-not-allowed";
+                buttonClasses += " bg-red-500 text-white border-red-600";
+                containerClasses += " bg-red-500/10 border-red-500/40";
               }
             } else if (isCorrect) {
               // Correct answer, not selected
-              optionClasses +=
-                " bg-green-500 text-white border-green-700 cursor-not-allowed";
+              buttonClasses += " bg-green-500 text-white border-green-600";
+              containerClasses += " bg-green-500/10 border-green-500/40";
             } else {
               // Other options
-              optionClasses +=
-                " bg-transparent text-muted cursor-not-allowed opacity-70";
+              buttonClasses += " bg-[var(--color-surface)] text-muted border-soft opacity-50";
+              containerClasses += " bg-transparent opacity-50";
             }
+            containerClasses += " cursor-not-allowed";
           } else {
             // Apply interactive styles when active
-            optionClasses +=
-              " bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-card)] hover:border-[var(--color-accent)]/60 cursor-pointer shadow-theme-soft hover:shadow-theme-strong";
+            buttonClasses += " bg-[var(--color-surface)] text-[var(--color-text)] border-soft";
+            containerClasses += " bg-[var(--color-surface)] hover:bg-[var(--color-card)] hover:border-[var(--color-accent)]/60 cursor-pointer shadow-theme-soft hover:shadow-theme-strong";
           }
 
           return (
             <div
               key={index}
-              className={optionClasses}
+              className={containerClasses}
               onClick={() => !isAnswerLocked && onSelectOption(option)}
             >
-              {option}
+              <div className={buttonClasses}>
+                {label}
+              </div>
+              <span className="text-base md:text-lg font-medium text-[var(--color-text)] flex-1">
+                {option}
+              </span>
             </div>
           );
         })}

@@ -3,6 +3,7 @@ import Results from "./Results";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../../context/QuizContext.jsx";
 import toast from "react-hot-toast";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 function Quiz() {
   // 1. Get ALL necessary state and actions from the context
@@ -100,39 +101,57 @@ function Quiz() {
             {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
             Complete
           </span>
-          {/* NEW: Quit Button in the header for easy access */}
+          {/* Quit Button */}
           <button
             onClick={handleQuitQuiz}
-            className="px-4 py-2 bg-red-500 text-white font-semibold rounded-full shadow-theme-soft hover:shadow-theme-strong transition duration-150 text-sm"
+            className="px-3 py-1.5 bg-red-500 text-white font-semibold rounded-full shadow-theme-soft hover:shadow-theme-strong transition duration-150 text-xs"
           >
-            Quit Quiz
+            Quit
           </button>
         </div>
       </div>
 
-      {/* Renders the current Question component */}
-      <Question
-        questionData={currentQuestion}
-        selectedOption={selectedOption}
-        isAnswerLocked={isAnswerLocked}
-        onSelectOption={handleAnswerSelection}
-      />
+      {/* Quiz Content with Side Arrow Navigation */}
+      <div className="relative">
+        {/* Left Arrow - Previous Question */}
+        <button
+          onClick={() => {
+            if (currentQuestionIndex > 0) {
+              // Navigate to previous question (this would need a context method)
+              // For now, we'll disable this as there's no "go back" in the context
+            }
+          }}
+          disabled={currentQuestionIndex === 0}
+          className={`absolute left-[-60px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition duration-200 ${
+            currentQuestionIndex === 0
+              ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-50"
+              : "bg-[var(--color-surface)] text-[var(--color-text)] border border-soft hover:shadow-theme-soft cursor-pointer"
+          }`}
+          aria-label="Previous Question"
+        >
+          <ChevronLeftIcon className="h-6 w-6" />
+        </button>
 
-      {/* Navigation Button */}
-      <div className="mt-10 text-right">
+        {/* Renders the current Question component */}
+        <Question
+          questionData={currentQuestion}
+          selectedOption={selectedOption}
+          isAnswerLocked={isAnswerLocked}
+          onSelectOption={handleAnswerSelection}
+        />
+
+        {/* Right Arrow - Next Question */}
         <button
           onClick={goToNextQuestion}
           disabled={!isAnswerLocked}
-          className={`px-8 py-3 font-semibold rounded-full transition duration-150 
-            ${
-              isAnswerLocked
-                ? "accent-button shadow-theme-soft hover:shadow-theme-strong"
-                : "bg-[var(--color-surface)] text-muted cursor-not-allowed"
-            }`}
+          className={`absolute right-[-60px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition duration-200 ${
+            isAnswerLocked
+              ? "accent-button shadow-theme-soft hover:shadow-theme-strong"
+              : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-50"
+          }`}
+          aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "View Results"}
         >
-          {currentQuestionIndex < totalQuestions - 1
-            ? "Next Question"
-            : "View Results"}
+          <ChevronRightIcon className="h-6 w-6" />
         </button>
       </div>
     </div>
