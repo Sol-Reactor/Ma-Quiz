@@ -35,7 +35,7 @@ function Home() {
       <div className="relative max-w-7xl mx-auto px-6 space-y-20">
         <section className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
           <div className="space-y-7">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface)] border border-soft text-xs font-semibold uppercase tracking-[0.3em] text-muted">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[var(--color-surface)] border border-soft text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-muted">
               Study studio for doers
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
