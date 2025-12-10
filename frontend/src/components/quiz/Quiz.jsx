@@ -80,9 +80,9 @@ function Quiz() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Quiz Progress Header */}
-      <div className="glass-panel flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 rounded-3xl">
+      <div className="glass-panel flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-3xl">
         <h1 className="text-2xl font-bold text-[var(--color-text)]">
           Question {currentQuestionIndex + 1} of {totalQuestions}
         </h1>
@@ -117,19 +117,18 @@ function Quiz() {
         <button
           onClick={() => {
             if (currentQuestionIndex > 0) {
-              // Navigate to previous question (this would need a context method)
-              // For now, we'll disable this as there's no "go back" in the context
+              // Navigate to previous question behavior if implemented
             }
           }}
           disabled={currentQuestionIndex === 0}
-          className={`absolute left-[-60px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition duration-200 ${
+          className={`absolute left-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
             currentQuestionIndex === 0
-              ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-50"
-              : "bg-[var(--color-surface)] text-[var(--color-text)] border border-soft hover:shadow-theme-soft cursor-pointer"
+              ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
+              : "bg-green-100/50 text-green-600 border-green-200 hover:bg-green-100 hover:border-green-300 hover:scale-105 shadow-sm"
           }`}
           aria-label="Previous Question"
         >
-          <ChevronLeftIcon className="h-6 w-6" />
+          <ChevronLeftIcon className="h-8 w-8" />
         </button>
 
         {/* Renders the current Question component */}
@@ -144,14 +143,14 @@ function Quiz() {
         <button
           onClick={goToNextQuestion}
           disabled={!isAnswerLocked}
-          className={`absolute right-[-60px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition duration-200 ${
+          className={`absolute right-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
             isAnswerLocked
-              ? "accent-button shadow-theme-soft hover:shadow-theme-strong"
-              : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-50"
+              ? "bg-green-100/80 text-green-600 border-green-300 hover:bg-green-200 hover:border-green-400 hover:scale-105 shadow-md"
+              : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
           }`}
           aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "View Results"}
         >
-          <ChevronRightIcon className="h-6 w-6" />
+          <ChevronRightIcon className="h-8 w-8" />
         </button>
       </div>
     </div>

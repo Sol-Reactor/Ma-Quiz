@@ -6,7 +6,7 @@ import { useQuiz } from "../context/QuizContext";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
 const pageContainerClass =
-  "min-h-[calc(100vh-64px)] bg-[var(--color-bg)] pt-20 pb-16 px-4 transition-colors";
+  "min-h-[calc(100vh-64px)] bg-[var(--color-bg)] pt-12 pb-12 px-4 transition-colors";
 
 const topicDescriptions = {
   "Frontend Fundamentals":

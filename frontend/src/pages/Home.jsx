@@ -38,9 +38,8 @@ function Home() {
             <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[var(--color-surface)] border border-soft text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-muted">
               Study studio for doers
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
-              Level up your engineering instincts with streak-friendly quiz
-              adventures.
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+              Master Your Coding Skills with Fun Quizzes
             </h1>
             <p className="text-lg text-muted leading-relaxed max-w-xl">
               AuraQuiz blends adaptive solo practice, timed sprints, and

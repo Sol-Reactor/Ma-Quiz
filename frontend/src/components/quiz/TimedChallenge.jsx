@@ -187,8 +187,8 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
       : "bg-emerald-500/15 text-emerald-500 border-emerald-500/35";
 
   return (
-    <div className="space-y-8">
-      <div className="glass-panel rounded-3xl px-6 py-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="space-y-6">
+      <div className="glass-panel rounded-3xl p-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
             Timed Challenge
@@ -246,14 +246,14 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
             }
           }}
           disabled={currentQuestionIndex === 0}
-          className={`absolute left-[-60px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition duration-200 ${
+          className={`absolute left-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
             currentQuestionIndex === 0
-              ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-50"
-              : "bg-[var(--color-surface)] text-[var(--color-text)] border border-soft hover:shadow-theme-soft cursor-pointer"
+              ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
+              : "bg-green-100/50 text-green-600 border-green-200 hover:bg-green-100 hover:border-green-300 hover:scale-105 shadow-sm"
           }`}
           aria-label="Previous Question"
         >
-          <ChevronLeftIcon className="h-6 w-6" />
+          <ChevronLeftIcon className="h-8 w-8" />
         </button>
 
         {/* Renders the current Question component */}
@@ -268,14 +268,14 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
         <button
           onClick={goToNextQuestion}
           disabled={!isAnswerLocked}
-          className={`absolute right-[-60px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition duration-200 ${
+          className={`absolute right-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
             isAnswerLocked
-              ? "accent-button shadow-theme-soft hover:shadow-theme-strong"
-              : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-50"
+              ? "bg-green-100/80 text-green-600 border-green-300 hover:bg-green-200 hover:border-green-400 hover:scale-105 shadow-md"
+              : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
           }`}
           aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Submit Answers"}
         >
-          <ChevronRightIcon className="h-6 w-6" />
+          <ChevronRightIcon className="h-8 w-8" />
         </button>
       </div>
     </div>

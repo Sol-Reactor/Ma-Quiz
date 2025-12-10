@@ -14,7 +14,7 @@ const Question = ({
   const optionLabels = ['A', 'B', 'C', 'D'];
 
   return (
-    <div className="glass-panel p-8 rounded-3xl space-y-8">
+    <div className="glass-panel p-6 rounded-3xl space-y-6">
       {questionData.topic && (
         <p className="text-base md:text-lg font-semibold text-muted uppercase tracking-[0.18em]">
           Topic:{" "}
