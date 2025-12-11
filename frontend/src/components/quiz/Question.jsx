@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const Question = ({
   questionData,
@@ -6,17 +6,6 @@ const Question = ({
   isAnswerLocked,
   onSelectOption,
 }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
   // Ensure options is an array
   const options = Array.isArray(questionData.options)
     ? questionData.options
@@ -119,8 +108,8 @@ const Question = ({
       )}
       
       {/* Mobile hint for navigation */}
-      {!isAnswerLocked && isMobile && (
-        <p className="text-xs text-center text-muted mt-4">
+      {!isAnswerLocked && (
+        <p className="text-xs text-center text-muted mt-4 md:hidden">
           Tap an option to select your answer
         </p>
       )}

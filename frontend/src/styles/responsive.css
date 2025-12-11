@@ -45,27 +45,8 @@
     padding: 0.5rem !important;
   }
   
-  .quiz-navigation {
-    position: fixed !important;
-    bottom: 1rem;
-    left: 0;
-    right: 0;
-    display: flex !important;
-    justify-content: space-between;
-    padding: 0 1rem;
-    z-index: 50;
-  }
-  
-  .quiz-navigation button {
-    width: 3rem !important;
-    height: 3rem !important;
-    position: static !important;
-    transform: none !important;
-    margin: 0 !important;
-  }
-  
   .question-container {
-    margin-bottom: 5rem !important; /* Add space for fixed navigation */
+    margin-bottom: 2rem !important; /* Add space for fixed navigation */
   }
   
   /* Progress bar */

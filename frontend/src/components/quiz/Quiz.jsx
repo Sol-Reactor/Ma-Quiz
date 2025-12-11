@@ -8,17 +8,6 @@ import { ChevronLeftIcon, ChevronRightIcon, ArrowPathIcon } from "@heroicons/rea
 import "../../styles/responsive.css";
 
 function Quiz() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
   
   // 1. Get ALL necessary state and actions from the context
   const {
@@ -95,7 +84,7 @@ function Quiz() {
   }
 
   return (
-    <div className="quiz-container space-y-6 px-2 sm:px-4">
+    <div className="quiz-container space-y-6 px-2 sm:px-4 pb-20 md:pb-6">
       {/* Quiz Progress Header */}
       <div className="glass-panel flex flex-col gap-3 p-4 sm:p-5 rounded-2xl sm:rounded-3xl">
         <div className="flex justify-between items-center">
@@ -143,67 +132,71 @@ function Quiz() {
         />
       </div>
 
-      {/* Mobile Navigation Buttons */}
-      {isMobile && (
-        <div className="quiz-navigation">
+      {/* Mobile Navigation Buttons - Always render on mobile */}
+      <div className="fixed bottom-4 left-0 right-0 z-50 md:hidden">
+        <div className="flex justify-between px-4 py-2 mx-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200">
           <button
             onClick={goToPreviousQuestion}
             disabled={currentQuestionIndex === 0}
-            className={`flex items-center justify-center rounded-full p-3 transition-all ${
+            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
               currentQuestionIndex === 0
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                : 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
+                : 'bg-blue-500 text-white hover:bg-blue-600 active:scale-95 shadow-md'
             }`}
             aria-label="Previous Question"
           >
-            <ChevronLeftIcon className="h-6 w-6" />
+            <ChevronLeftIcon className="h-5 w-5" />
           </button>
+          
+          <div className="flex items-center px-3">
+            <span className="text-sm font-medium text-gray-600">
+              {currentQuestionIndex + 1} / {totalQuestions}
+            </span>
+          </div>
           
           <button
             onClick={goToNextQuestion}
             disabled={!isAnswerLocked}
-            className={`flex items-center justify-center rounded-full p-3 transition-all ${
+            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
               isAnswerLocked
-                ? 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
+                ? 'bg-green-500 text-white hover:bg-green-600 active:scale-95 shadow-md'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
             aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "View Results"}
           >
-            <ChevronRightIcon className="h-6 w-6" />
-          </button>
-        </div>
-      )}
-
-      {/* Desktop Navigation Buttons */}
-      {!isMobile && (
-        <div className="flex justify-between items-center mt-6">
-          <button
-            onClick={goToPreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full border-2 transition-all ${
-              currentQuestionIndex === 0
-                ? 'border-gray-200 text-gray-400 cursor-not-allowed'
-                : 'border-green-400 text-green-600 hover:bg-green-50 active:scale-95'
-            }`}
-          >
-            <ChevronLeftIcon className="h-5 w-5" />
-            <span>Previous</span>
-          </button>
-          
-          <button
-            onClick={goToNextQuestion}
-            disabled={!isAnswerLocked}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full border-2 transition-all ${
-              isAnswerLocked
-                ? 'bg-green-500 text-white border-green-500 hover:bg-green-600 hover:border-green-600 active:scale-95'
-                : 'bg-gray-200 text-gray-400 border-gray-200 cursor-not-allowed'
-            }`}
-          >
-            <span>{currentQuestionIndex < totalQuestions - 1 ? 'Next' : 'Finish'}</span>
             <ChevronRightIcon className="h-5 w-5" />
           </button>
         </div>
-      )}
+      </div>
+
+      {/* Desktop Navigation Buttons */}
+      <div className="hidden md:flex justify-between items-center mt-6">
+        <button
+          onClick={goToPreviousQuestion}
+          disabled={currentQuestionIndex === 0}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full border-2 transition-all ${
+            currentQuestionIndex === 0
+              ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+              : 'border-green-400 text-green-600 hover:bg-green-50 active:scale-95'
+          }`}
+        >
+          <ChevronLeftIcon className="h-5 w-5" />
+          <span>Previous</span>
+        </button>
+        
+        <button
+          onClick={goToNextQuestion}
+          disabled={!isAnswerLocked}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full border-2 transition-all ${
+            isAnswerLocked
+              ? 'bg-green-500 text-white border-green-500 hover:bg-green-600 hover:border-green-600 active:scale-95'
+              : 'bg-gray-200 text-gray-400 border-gray-200 cursor-not-allowed'
+          }`}
+        >
+          <span>{currentQuestionIndex < totalQuestions - 1 ? 'Next' : 'Finish'}</span>
+          <ChevronRightIcon className="h-5 w-5" />
+        </button>
+      </div>
     </div>
   );
 }

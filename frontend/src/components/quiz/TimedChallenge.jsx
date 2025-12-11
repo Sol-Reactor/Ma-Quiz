@@ -187,7 +187,7 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
       : "bg-emerald-500/15 text-emerald-500 border-emerald-500/35";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20 md:pb-6">
       <div className="glass-panel rounded-3xl p-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
@@ -237,24 +237,41 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
 
       {/* Quiz Content with Side Arrow Navigation */}
       <div className="relative">
-        {/* Left Arrow - Previous Question */}
-        <button
-          onClick={() => {
-            if (currentQuestionIndex > 0) {
-              // Navigate to previous question (this would need a context method)
-              // For now, we'll disable this as there's no "go back" in the context
-            }
-          }}
-          disabled={currentQuestionIndex === 0}
-          className={`absolute left-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
-            currentQuestionIndex === 0
-              ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
-              : "bg-green-100/50 text-green-600 border-green-200 hover:bg-green-100 hover:border-green-300 hover:scale-105 shadow-sm"
-          }`}
-          aria-label="Previous Question"
-        >
-          <ChevronLeftIcon className="h-8 w-8" />
-        </button>
+        {/* Desktop Side Navigation - Hidden on mobile */}
+        <div className="hidden md:block">
+          {/* Left Arrow - Previous Question */}
+          <button
+            onClick={() => {
+              if (currentQuestionIndex > 0) {
+                // Navigate to previous question (this would need a context method)
+                // For now, we'll disable this as there's no "go back" in the context
+              }
+            }}
+            disabled={currentQuestionIndex === 0}
+            className={`absolute left-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
+              currentQuestionIndex === 0
+                ? "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
+                : "bg-green-100/50 text-green-600 border-green-200 hover:bg-green-100 hover:border-green-300 hover:scale-105 shadow-sm"
+            }`}
+            aria-label="Previous Question"
+          >
+            <ChevronLeftIcon className="h-8 w-8" />
+          </button>
+
+          {/* Right Arrow - Next Question */}
+          <button
+            onClick={goToNextQuestion}
+            disabled={!isAnswerLocked}
+            className={`absolute right-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
+              isAnswerLocked
+                ? "bg-green-100/80 text-green-600 border-green-300 hover:bg-green-200 hover:border-green-400 hover:scale-105 shadow-md"
+                : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
+            }`}
+            aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Submit Answers"}
+          >
+            <ChevronRightIcon className="h-8 w-8" />
+          </button>
+        </div>
 
         {/* Renders the current Question component */}
         <Question
@@ -263,20 +280,42 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
           isAnswerLocked={isAnswerLocked}
           onSelectOption={handleAnswerSelection}
         />
+      </div>
 
-        {/* Right Arrow - Next Question */}
-        <button
-          onClick={goToNextQuestion}
-          disabled={!isAnswerLocked}
-          className={`absolute right-[-80px] top-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition duration-200 border-2 ${
-            isAnswerLocked
-              ? "bg-green-100/80 text-green-600 border-green-300 hover:bg-green-200 hover:border-green-400 hover:scale-105 shadow-md"
-              : "bg-[var(--color-surface)] text-muted cursor-not-allowed opacity-30 border-transparent"
-          }`}
-          aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Submit Answers"}
-        >
-          <ChevronRightIcon className="h-8 w-8" />
-        </button>
+      {/* Mobile Navigation Buttons - Fixed at bottom */}
+      <div className="fixed bottom-4 left-0 right-0 z-50 md:hidden">
+        <div className="flex justify-between px-4 py-2 mx-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200">
+          <button
+            onClick={() => {
+              // For timed challenge, we don't typically allow going back
+              // But we can add this functionality if needed
+            }}
+            disabled={true} // Disabled for timed challenges
+            className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 text-gray-400 cursor-not-allowed"
+            aria-label="Previous Question (Disabled in Timed Mode)"
+          >
+            <ChevronLeftIcon className="h-5 w-5" />
+          </button>
+          
+          <div className="flex items-center px-3">
+            <span className="text-sm font-medium text-gray-600">
+              {currentQuestionIndex + 1} / {totalQuestions}
+            </span>
+          </div>
+          
+          <button
+            onClick={goToNextQuestion}
+            disabled={!isAnswerLocked}
+            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
+              isAnswerLocked
+                ? 'bg-green-500 text-white hover:bg-green-600 active:scale-95 shadow-md'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+            aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Submit Answers"}
+          >
+            <ChevronRightIcon className="h-5 w-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
