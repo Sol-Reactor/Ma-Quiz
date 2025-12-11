@@ -46,7 +46,34 @@
   }
   
   .question-container {
-    margin-bottom: 2rem !important; /* Add space for fixed navigation */
+    margin-bottom: 8rem !important; /* Add more space for larger fixed navigation */
+  }
+  
+  /* Ensure mobile navigation is always visible */
+  .mobile-quiz-nav {
+    position: fixed !important;
+    bottom: 1.5rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    z-index: 9999 !important;
+    display: block !important;
+  }
+  
+  /* Make navigation buttons more prominent */
+  .mobile-nav-button {
+    min-width: 4rem !important;
+    min-height: 4rem !important;
+    font-size: 1.25rem !important;
+  }
+  
+  /* Add breathing animation for active next button */
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  .mobile-nav-button.active {
+    animation: breathe 2s ease-in-out infinite;
   }
   
   /* Progress bar */

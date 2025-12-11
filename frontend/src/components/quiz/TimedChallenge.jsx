@@ -282,39 +282,56 @@ const TimedChallenge = ({ durationSeconds, onQuit }) => {
         />
       </div>
 
-      {/* Mobile Navigation Buttons - Fixed at bottom */}
-      <div className="fixed bottom-4 left-0 right-0 z-50 md:hidden">
-        <div className="flex justify-between px-4 py-2 mx-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200">
-          <button
-            onClick={() => {
-              // For timed challenge, we don't typically allow going back
-              // But we can add this functionality if needed
-            }}
-            disabled={true} // Disabled for timed challenges
-            className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 text-gray-400 cursor-not-allowed"
-            aria-label="Previous Question (Disabled in Timed Mode)"
-          >
-            <ChevronLeftIcon className="h-5 w-5" />
-          </button>
-          
-          <div className="flex items-center px-3">
-            <span className="text-sm font-medium text-gray-600">
-              {currentQuestionIndex + 1} / {totalQuestions}
-            </span>
+      {/* Mobile Navigation Buttons - SUPER VISIBLE on mobile screens */}
+      <div className="block md:hidden">
+        {/* Hint text when next button becomes available */}
+        {isAnswerLocked && (
+          <div className="fixed bottom-32 left-4 right-4 z-[9998] text-center">
+            <div className="bg-green-500 text-white px-4 py-2 rounded-full shadow-lg animate-bounce inline-block">
+              <span className="text-sm font-bold">✓ Tap Next to Continue!</span>
+            </div>
           </div>
-          
-          <button
-            onClick={goToNextQuestion}
-            disabled={!isAnswerLocked}
-            className={`flex items-center justify-center w-12 h-12 rounded-full transition-all ${
-              isAnswerLocked
-                ? 'bg-green-500 text-white hover:bg-green-600 active:scale-95 shadow-md'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
-            aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Submit Answers"}
-          >
-            <ChevronRightIcon className="h-5 w-5" />
-          </button>
+        )}
+        
+        <div className="fixed bottom-6 left-4 right-4 z-[9999] bg-gradient-to-r from-orange-50 to-green-50 rounded-3xl shadow-2xl border-2 border-orange-200 p-4">
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => {
+                // For timed challenge, we don't typically allow going back
+              }}
+              disabled={true} // Disabled for timed challenges
+              className="flex items-center justify-center w-16 h-16 rounded-full font-bold text-xl bg-gray-200 text-gray-400 cursor-not-allowed opacity-60 border-4 border-gray-300"
+              aria-label="Previous Question (Disabled in Timed Mode)"
+            >
+              <ChevronLeftIcon className="h-8 w-8 stroke-[3]" />
+            </button>
+            
+            <div className="flex flex-col items-center px-6 py-2 bg-white rounded-2xl shadow-lg border-2 border-orange-200">
+              <span className="text-xs text-orange-600 uppercase tracking-wide font-bold">Timed Question</span>
+              <span className="text-2xl font-black text-gray-900">
+                {currentQuestionIndex + 1} / {totalQuestions}
+              </span>
+            </div>
+            
+            <button
+              onClick={goToNextQuestion}
+              disabled={!isAnswerLocked}
+              className={`flex items-center justify-center w-16 h-16 rounded-full font-bold text-xl transition-all border-4 ${
+                isAnswerLocked
+                  ? 'bg-green-600 text-white hover:bg-green-700 active:scale-90 shadow-xl border-green-800 hover:shadow-2xl animate-bounce'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-60 border-gray-300'
+              }`}
+              aria-label={currentQuestionIndex < totalQuestions - 1 ? "Next Question" : "Submit Answers"}
+              style={isAnswerLocked ? {
+                boxShadow: '0 0 20px rgba(34, 197, 94, 0.6), 0 0 40px rgba(34, 197, 94, 0.4)'
+              } : {}}
+            >
+              <ChevronRightIcon className="h-8 w-8 stroke-[3]" />
+              {isAnswerLocked && (
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
