@@ -1,0 +1,124 @@
+/* Mobile-first responsive styles */
+
+/* Base mobile styles */
+@media (max-width: 767px) {
+  /* Home Page */
+  .glass-panel {
+    padding: 1.5rem !important;
+  }
+  
+  /* Adjust hero section */
+  .hero-section h1 {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Stack grid items on mobile */
+  .grid-cols-1 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Adjust padding and margins */
+  .px-6 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .py-10 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  /* Adjust font sizes */
+  .text-3xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+  
+  /* Quiz Component */
+  .quiz-container {
+    padding: 0.5rem !important;
+  }
+  
+  .quiz-navigation {
+    position: fixed !important;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    display: flex !important;
+    justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 50;
+  }
+  
+  .quiz-navigation button {
+    width: 3rem !important;
+    height: 3rem !important;
+    position: static !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+  
+  .question-container {
+    margin-bottom: 5rem !important; /* Add space for fixed navigation */
+  }
+  
+  /* Progress bar */
+  .progress-container {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    align-items: flex-start !important;
+  }
+  
+  .progress-bar {
+    width: 100% !important;
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .glass-panel {
+    padding: 2rem !important;
+  }
+  
+  .quiz-navigation button {
+    width: 4rem !important;
+    height: 4rem !important;
+  }
+}
+
+/* Hide desktop elements on mobile */
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Show mobile elements on mobile */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+/* Adjust quiz options for mobile */
+@media (max-width: 767px) {
+  .quiz-option {
+    padding: 0.75rem 1rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .quiz-question {
+    font-size: 1.25rem !important;
+    line-height: 1.5 !important;
+  }
+}

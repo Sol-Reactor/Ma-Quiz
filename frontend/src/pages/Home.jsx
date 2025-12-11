@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useAuth } from "../context/AuthContext.jsx";
 import {
   highlightStats,
@@ -11,11 +10,22 @@ import {
   toolkitHighlights,
   communityHighlights,
 } from "../assets/data/HomeContents.js";
+import "../styles/responsive.css";
 
 function Home() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
-
   const { isAuthenticated } = useAuth();
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleStart = () => {
     if (isAuthenticated) {
@@ -26,22 +36,22 @@ function Home() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-64px)] bg-[var(--color-bg)] pt-24 pb-20">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-[var(--color-accent)]/25 blur-3xl" />
-        <div className="absolute bottom-0 right-16 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl" />
+    <div className="relative min-h-[calc(100vh-64px)] bg-[var(--color-bg)] pt-16 sm:pt-20 pb-16 sm:pb-20">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 h-48 sm:h-72 w-48 sm:w-72 rounded-full bg-[var(--color-accent)]/25 blur-3xl" />
+        <div className="absolute bottom-0 right-4 sm:right-16 h-32 sm:h-64 w-32 sm:w-64 rounded-full bg-emerald-400/20 blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 space-y-20">
-        <section className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
-          <div className="space-y-7">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 space-y-12 sm:space-y-20">
+        <section className="grid gap-8 md:gap-12 lg:grid-cols-[1.1fr_0.9fr] items-center">
+          <div className="space-y-5 sm:space-y-7">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[var(--color-surface)] border border-soft text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.25em] text-muted">
               Study studio for doers
             </span>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
               Master Your Coding Skills with Fun Quizzes
             </h1>
-            <p className="text-lg text-muted leading-relaxed max-w-xl">
+            <p className="text-base sm:text-lg text-muted leading-relaxed max-w-xl">
               AuraQuiz blends adaptive solo practice, timed sprints, and
               community battles so you can build skills with momentum—not
               burnout.
@@ -91,7 +101,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-3xl p-10 space-y-10">
+        <section className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 space-y-8 sm:space-y-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h2 className="text-3xl font-extrabold text-[var(--color-text)]">
@@ -127,7 +137,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="grid gap-8 lg:grid-cols-[1fr_1.1fr] items-start">
+        <section className="grid gap-8 md:grid-cols-2 lg:grid-cols-[1fr_1.1fr] items-start">
           <div className="space-y-5">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-surface)] border border-soft text-xs font-semibold uppercase tracking-[0.3em] text-muted">
               Learning playlists
@@ -158,7 +168,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-3xl p-10 space-y-10">
+        <section className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 space-y-8 sm:space-y-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h2 className="text-3xl font-extrabold text-[var(--color-text)]">
@@ -225,7 +235,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-3xl p-10 space-y-10">
+        <section className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 space-y-8 sm:space-y-10">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <h2 className="text-3xl font-extrabold text-[var(--color-text)]">
               Trusted by ambitious learners
@@ -264,7 +274,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-3xl p-10 text-center space-y-6">
+        <section className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 text-center space-y-5 sm:space-y-6">
           <h2 className="text-3xl font-extrabold text-[var(--color-text)]">
             Bring your curiosity—AuraQuiz powers the rest.
           </h2>
@@ -288,7 +298,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="glass-panel rounded-3xl p-10 space-y-8">
+        <section className="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
           <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] items-center">
             <div className="space-y-4">
               <h2 className="text-3xl font-extrabold text-[var(--color-text)]">
